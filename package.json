@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npx @cloudflare/next-on-pages",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "preview": "npm run build && wrangler pages dev .vercel/output/static",
-    "deploy": "npm run build && wrangler pages deploy .vercel/output/static",
     "db:migrate": "tsx scripts/migrate-db.ts",
     "init-db": "tsx scripts/init-db.ts",
     "setup-db": "npm run db:migrate && npm run init-db",
@@ -39,7 +37,6 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1",
     "@cloudflare/workers-types": "^4.20241127.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.12",

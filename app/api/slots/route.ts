@@ -1,21 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db/client';
-import { timeSlots } from '@/lib/db/schema';
-import { eq, and } from 'drizzle-orm';
-import { getAvailableDates, generateTimeSlots, isSlotAvailable } from '@/lib/utils/slots';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { getDb } from "@/lib/db/client";
+import { timeSlots } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
+import {
+  getAvailableDates,
+  generateTimeSlots,
+  isSlotAvailable,
+} from "@/lib/utils/slots";
+import { z } from "zod";
+
+export const dynamic = "force-dynamic";
 
 const getSlotsSchema = z.object({
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional()
+  date: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
 });
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const queryDate = searchParams.get('date');
+    const queryDate = searchParams.get("date");
 
     const validatedQuery = getSlotsSchema.parse({
-      date: queryDate || undefined
+      date: queryDate || undefined,
     });
 
     const db = getDb();
@@ -27,21 +36,21 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({
         date: validatedQuery.date,
-        slots: availableSlots
+        slots: availableSlots,
       });
     } else {
       // Récupérer tous les créneaux disponibles pour les prochains jours
       const availableDates = getAvailableDates();
       const allSlots = await Promise.all(
         availableDates.map(async (date) => {
-          const dateStr = date.toISOString().split('T')[0];
+          const dateStr = date.toISOString().split("T")[0];
           const slots = await getAvailableSlotsForDate(db, date);
 
           return {
             date: dateStr,
-            slots: slots
+            slots: slots,
           };
-        })
+        }),
       );
 
       return NextResponse.json(allSlots);
@@ -49,21 +58,21 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid query parameters', details: error.errors },
-        { status: 400 }
+        { error: "Invalid query parameters", details: error.errors },
+        { status: 400 },
       );
     }
 
-    console.error('Error fetching slots:', error);
+    console.error("Error fetching slots:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch slots' },
-      { status: 500 }
+      { error: "Failed to fetch slots" },
+      { status: 500 },
     );
   }
 }
 
 async function getAvailableSlotsForDate(db: any, date: Date) {
-  const dateStr = date.toISOString().split('T')[0];
+  const dateStr = date.toISOString().split("T")[0];
 
   // Générer tous les créneaux possibles pour cette date
   const possibleSlots = generateTimeSlots(date);
@@ -77,16 +86,16 @@ async function getAvailableSlotsForDate(db: any, date: Date) {
   const reservedTimes = new Set(
     reservedSlots
       .filter((slot: any) => !slot.isAvailable)
-      .map((slot: any) => slot.time)
+      .map((slot: any) => slot.time),
   );
 
   // Filtrer les créneaux disponibles
   const availableSlots = possibleSlots
-    .filter(time => !reservedTimes.has(time))
-    .filter(time => isSlotAvailable(date, time))
-    .map(time => ({
+    .filter((time) => !reservedTimes.has(time))
+    .filter((time) => isSlotAvailable(date, time))
+    .map((time) => ({
       time,
-      isAvailable: true
+      isAvailable: true,
     }));
 
   return availableSlots;
@@ -100,8 +109,8 @@ export async function POST(request: NextRequest) {
 
     if (!date || !time) {
       return NextResponse.json(
-        { error: 'Date and time are required' },
-        { status: 400 }
+        { error: "Date and time are required" },
+        { status: 400 },
       );
     }
 
@@ -111,8 +120,8 @@ export async function POST(request: NextRequest) {
     // Vérifier que le créneau est disponible
     if (!isSlotAvailable(slotDate, time)) {
       return NextResponse.json(
-        { error: 'Slot is not available' },
-        { status: 400 }
+        { error: "Slot is not available" },
+        { status: 400 },
       );
     }
 
@@ -120,15 +129,12 @@ export async function POST(request: NextRequest) {
     const existingSlot = await db
       .select()
       .from(timeSlots)
-      .where(and(
-        eq(timeSlots.date, date),
-        eq(timeSlots.time, time)
-      ));
+      .where(and(eq(timeSlots.date, date), eq(timeSlots.time, time)));
 
     if (existingSlot.length > 0) {
       return NextResponse.json(
-        { error: 'Slot is already reserved' },
-        { status: 409 }
+        { error: "Slot is already reserved" },
+        { status: 409 },
       );
     }
 
@@ -138,16 +144,16 @@ export async function POST(request: NextRequest) {
       .values({
         date,
         time,
-        isAvailable: false
+        isAvailable: false,
       })
       .returning();
 
     return NextResponse.json(newSlot, { status: 201 });
   } catch (error) {
-    console.error('Error reserving slot:', error);
+    console.error("Error reserving slot:", error);
     return NextResponse.json(
-      { error: 'Failed to reserve slot' },
-      { status: 500 }
+      { error: "Failed to reserve slot" },
+      { status: 500 },
     );
   }
 }

@@ -4,6 +4,8 @@ import { orders, orderItems } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const updateOrderSchema = z.object({
   status: z
     .enum(["pending", "confirmed", "preparing", "ready", "completed"])

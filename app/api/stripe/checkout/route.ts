@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const createCheckoutSchema = z.object({
   orderData: z.object({
     customerName: z.string().min(1),

@@ -5,6 +5,8 @@ import { getDb } from "@/lib/db/client";
 import { adminUsers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
+export const dynamic = "force-dynamic";
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({

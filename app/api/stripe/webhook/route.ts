@@ -5,6 +5,8 @@ import { orders, orderItems, timeSlots } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generateOrderNumber } from "@/lib/utils/orders";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");

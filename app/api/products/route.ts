@@ -1,7 +1,9 @@
-import { NextResponse } from 'next/server';
-import { getDb } from '@/lib/db/client';
-import { products, ingredients } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { NextResponse } from "next/server";
+import { getDb } from "@/lib/db/client";
+import { products, ingredients } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
@@ -24,17 +26,17 @@ export async function GET() {
 
         return {
           ...product,
-          ingredients: productIngredients
+          ingredients: productIngredients,
         };
-      })
+      }),
     );
 
     return NextResponse.json(productsWithIngredients);
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch products' },
-      { status: 500 }
+      { error: "Failed to fetch products" },
+      { status: 500 },
     );
   }
 }

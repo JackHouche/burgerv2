@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Product } from '@/types';
-import { useCart } from '@/hooks/useCart';
-import { Header } from '@/components/ui/Header';
-import { Navigation } from '@/components/ui/Navigation';
-import { CategoryFilter } from '@/components/products/CategoryFilter';
-import { ProductCard } from '@/components/products/ProductCard';
+import { useState, useEffect } from "react";
+import { Product } from "@/types";
+import { useCart } from "@/hooks/useCart";
+import { Header } from "@/components/ui/Header";
+import { Navigation } from "@/components/ui/Navigation";
+import { CategoryFilter } from "@/components/products/CategoryFilter";
+import { ProductCard } from "@/components/products/ProductCard";
+
+export const dynamic = "force-dynamic";
 
 export default function MenuPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,20 +22,20 @@ export default function MenuPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch("/api/products");
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const filteredProducts = selectedCategory
-    ? products.filter(product => product.category === selectedCategory)
+    ? products.filter((product) => product.category === selectedCategory)
     : products;
 
   const handleAddToCart = (product: Product) => {

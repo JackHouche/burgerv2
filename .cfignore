@@ -3,11 +3,15 @@ node_modules/
 .next/standalone/
 .next/static/chunks/webpack-*
 .next/cache/webpack/
+.next/build-manifest.json
+.next/static/chunks/pages/
+.next/server/chunks/
 cache/
 .next/*/cache/
 .next/*/webpack/
-**/cache/webpack/**
+**/cache/**
 **/*.pack
+**/*.tsbuildinfo
 .env*
 .DS_Store
 *.log
@@ -17,3 +21,4 @@ build/
 dist/
 temp/
 .tmp/
+out/

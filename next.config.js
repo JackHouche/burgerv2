@@ -20,6 +20,8 @@ const nextConfig = {
       ...config.resolve.alias,
       "@": path.resolve(__dirname, "."),
     };
+    // Disable cache to reduce file sizes for Cloudflare Pages
+    config.cache = false;
     return config;
   },
 };

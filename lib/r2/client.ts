@@ -43,7 +43,11 @@ export async function uploadImageToR2(file: File): Promise<string> {
   await upload.done();
 
   // Construire l'URL publique de l'image
-  const publicUrl = `https://${bucketName}.${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com/${fileName}`;
+  // En production, utiliser l'URL publique R2 configurée
+  const baseUrl =
+    process.env.R2_PUBLIC_URL ||
+    `https://${bucketName}.${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+  const publicUrl = `${baseUrl}/${fileName}`;
 
   return publicUrl;
 }

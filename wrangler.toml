@@ -1,15 +1,24 @@
-name = "click-collect-restaurant"
+name = "burger"
 compatibility_date = "2024-01-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "click-collect-db"
-database_id = "your-database-id"
+database_name = "burgerdb"
+database_id = "burgerdb"
 
 [[r2_buckets]]
 binding = "IMAGES"
-bucket_name = "product-images"
+bucket_name = "burgerfiles"
 
 [vars]
-STRIPE_PUBLISHABLE_KEY = "pk_test_..."
-NEXTAUTH_URL = "http://localhost:3000"
+# Production URLs - à mettre à jour lors du déploiement
+NEXTAUTH_URL = "https://burger.pages.dev"
+R2_PUBLIC_URL = "https://pub-e60d9d89a38b4236976356ca78e829f8.r2.dev"
+
+# Variables à configurer dans Cloudflare Pages Dashboard
+# STRIPE_SECRET_KEY = "sk_live_..."
+# STRIPE_PUBLISHABLE_KEY = "pk_live_..."
+# NEXTAUTH_SECRET = "generate-random-secret"
+# CLOUDFLARE_ACCOUNT_ID = "your-account-id"
+# R2_ACCESS_KEY_ID = "your-r2-access-key"
+# R2_SECRET_ACCESS_KEY = "your-r2-secret-key"

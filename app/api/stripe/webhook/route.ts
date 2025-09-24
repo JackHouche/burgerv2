@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { getDb } from "@/lib/db/client";
 import { orders, orderItems, timeSlots } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const stripe = getStripe();
     const event = stripe.webhooks.constructEvent(
       body,
       signature,

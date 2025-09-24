@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { getStripe } from "@/lib/stripe";
+import { z } from "zod";
 
 const createCheckoutSchema = z.object({
   orderData: z.object({
@@ -9,15 +9,17 @@ const createCheckoutSchema = z.object({
     customerPhone: z.string().optional(),
     pickupDate: z.string(),
     pickupTime: z.string(),
-    items: z.array(z.object({
-      productId: z.number(),
-      productName: z.string(),
-      quantity: z.number().positive(),
-      unitPrice: z.number().positive(),
-      customizations: z.string().optional()
-    })),
-    notes: z.string().optional()
-  })
+    items: z.array(
+      z.object({
+        productId: z.number(),
+        productName: z.string(),
+        quantity: z.number().positive(),
+        unitPrice: z.number().positive(),
+        customizations: z.string().optional(),
+      }),
+    ),
+    notes: z.string().optional(),
+  }),
 });
 
 export async function POST(request: NextRequest) {
@@ -26,9 +28,9 @@ export async function POST(request: NextRequest) {
     const { orderData } = createCheckoutSchema.parse(body);
 
     // Créer les line items pour Stripe
-    const lineItems = orderData.items.map(item => ({
+    const lineItems = orderData.items.map((item) => ({
       price_data: {
-        currency: 'eur',
+        currency: "eur",
         product_data: {
           name: item.productName,
           description: item.customizations || undefined,
@@ -39,39 +41,40 @@ export async function POST(request: NextRequest) {
     }));
 
     // Créer la session Stripe
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       line_items: lineItems,
-      mode: 'payment',
+      mode: "payment",
       success_url: `${request.nextUrl.origin}/order/{CHECKOUT_SESSION_ID}`,
       cancel_url: `${request.nextUrl.origin}/checkout`,
       customer_email: orderData.customerEmail,
       metadata: {
         customerName: orderData.customerName,
-        customerPhone: orderData.customerPhone || '',
+        customerPhone: orderData.customerPhone || "",
         pickupDate: orderData.pickupDate,
         pickupTime: orderData.pickupTime,
-        notes: orderData.notes || '',
-        orderData: JSON.stringify(orderData)
-      }
+        notes: orderData.notes || "",
+        orderData: JSON.stringify(orderData),
+      },
     });
 
     return NextResponse.json({
       sessionId: session.id,
-      url: session.url
+      url: session.url,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid input data', details: error.errors },
-        { status: 400 }
+        { error: "Invalid input data", details: error.errors },
+        { status: 400 },
       );
     }
 
-    console.error('Stripe checkout error:', error);
+    console.error("Stripe checkout error:", error);
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
-      { status: 500 }
+      { error: "Failed to create checkout session" },
+      { status: 500 },
     );
   }
 }

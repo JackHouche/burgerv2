@@ -11,7 +11,7 @@ binding = "IMAGES"
 bucket_name = "burgerfiles"
 
 [vars]
-# Production URLs - à mettre à jour lors du déploiement
+# Production URLs - configurées pour Cloudflare Pages
 NEXTAUTH_URL = "https://burger.pages.dev"
 R2_PUBLIC_URL = "https://pub-e60d9d89a38b4236976356ca78e829f8.r2.dev"
 

@@ -20,6 +20,10 @@ const nextConfig = {
       ...config.resolve.alias,
       "@": path.resolve(__dirname, "."),
     };
+    // Disable cache only in CI/build environment to reduce file sizes
+    if (process.env.CF_PAGES || process.env.NODE_ENV === "production") {
+      config.cache = false;
+    }
     return config;
   },
 };

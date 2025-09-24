@@ -35,10 +35,17 @@ export function getCloudflareDb(d1: D1Database) {
 
 // Client unifié qui détecte l'environnement
 export function getDb() {
-  if (process.env.NODE_ENV === "development" || !process.env.DATABASE_ID) {
+  // Développement local
+  if (process.env.NODE_ENV === "development") {
     return getLocalDb();
   }
 
-  // En production, D1 sera injecté via les bindings Cloudflare
-  throw new Error("D1 database not available in production context");
+  // Cloudflare Pages - D1 accessible via process.env.DB
+  if (typeof process !== "undefined" && process.env.DB) {
+    return getCloudflareDb(process.env.DB as any);
+  }
+
+  // Fallback vers local si aucun environnement détecté
+  console.warn("No D1 binding found, falling back to local database");
+  return getLocalDb();
 }

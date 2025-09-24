@@ -1,18 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Configuration pour Cloudflare Pages avec Functions (pas d'export statique)
+  // Configuration simple pour Cloudflare Pages
   images: {
     unoptimized: true,
   },
-  // Correction de l'API dépréciée
-  serverExternalPackages: [],
   // Optimisations
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: false,
+  },
+  // Configuration spécifique pour éviter les erreurs de build
+  experimental: {
+    esmExternals: false,
   },
 };
 

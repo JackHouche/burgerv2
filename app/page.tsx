@@ -25,7 +25,7 @@ export default function MenuPage() {
     try {
       const response = await fetch("/api/products");
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as Product[];
         setProducts(data);
       }
     } catch (error) {
@@ -103,7 +103,10 @@ export default function MenuPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pb-20">
-      <Header title="Notre Menu" subtitle="Commandez en ligne, récupérez sur place" />
+      <Header
+        title="Notre Menu"
+        subtitle="Commandez en ligne, récupérez sur place"
+      />
 
       <CategoryFilter
         selectedCategory={selectedCategory}
@@ -115,7 +118,9 @@ export default function MenuPage() {
         <div className="px-4 pt-4 pb-2">
           <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-6 text-white shadow-lg">
             <h2 className="text-xl font-bold mb-2">🎉 Offre du jour</h2>
-            <p className="text-sm opacity-90">-10% sur toutes les commandes avec le code BLOCK10</p>
+            <p className="text-sm opacity-90">
+              -10% sur toutes les commandes avec le code BLOCK10
+            </p>
           </div>
         </div>
       )}
@@ -152,10 +157,7 @@ export default function MenuPage() {
                 className="h-full animate-fade-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <ProductCard
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                />
+                <ProductCard product={product} onAddToCart={handleAddToCart} />
               </div>
             ))}
           </div>

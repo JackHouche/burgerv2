@@ -104,7 +104,7 @@ async function getAvailableSlotsForDate(db: any, date: Date) {
 // Réserver un créneau
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = (await request.json()) as { date: string; time: string };
     const { date, time } = body;
 
     if (!date || !time) {

@@ -3,25 +3,6 @@ import Database from "better-sqlite3";
 import { drizzle as drizzleLocal } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema";
 
-// Type pour Cloudflare D1
-interface D1Database {
-  prepare(query: string): any;
-  dump(): Promise<ArrayBuffer>;
-  batch<T = unknown>(statements: any[]): Promise<D1Result<T>[]>;
-  exec(query: string): Promise<D1ExecResult>;
-}
-
-interface D1Result<T = unknown> {
-  results: T[];
-  success: boolean;
-  meta: any;
-}
-
-interface D1ExecResult {
-  count: number;
-  duration: number;
-}
-
 // Pour le développement local
 export function getLocalDb() {
   const sqlite = new Database("./dev.db");
@@ -29,7 +10,7 @@ export function getLocalDb() {
 }
 
 // Pour la production Cloudflare
-export function getCloudflareDb(d1: D1Database) {
+export function getCloudflareDb(d1: any) {
   return drizzle(d1, { schema });
 }
 

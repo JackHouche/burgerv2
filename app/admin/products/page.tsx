@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Header } from '@/components/ui/Header';
-import { Button } from '@/components/ui/Button';
-import { formatPrice } from '@/lib/utils';
-import { Product } from '@/types';
-import { Plus, Edit, Trash2, Image as ImageIcon } from 'lucide-react';
-import Image from 'next/image';
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Header } from "@/components/ui/Header";
+import { Button } from "@/components/ui/Button";
+import { formatPrice } from "@/lib/utils";
+import { Product } from "@/types";
+import { Plus, Edit, Trash2, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 export default function AdminProductsPage() {
   const { data: session, status } = useSession();
@@ -18,10 +18,10 @@ export default function AdminProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === 'loading') return;
+    if (status === "loading") return;
 
-    if (!session || session.user.role !== 'admin') {
-      router.push('/admin/login');
+    if (!session || session.user.role !== "admin") {
+      router.push("/admin/login");
       return;
     }
 
@@ -30,72 +30,75 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch("/api/products");
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as Product[];
         setProducts(data);
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDeleteProduct = async (productId: number) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
       return;
     }
 
     try {
       const response = await fetch(`/api/admin/products/${productId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (response.ok) {
-        setProducts(products.filter(p => p.id !== productId));
+        setProducts(products.filter((p) => p.id !== productId));
       } else {
-        alert('Erreur lors de la suppression');
+        alert("Erreur lors de la suppression");
       }
     } catch (error) {
-      console.error('Error deleting product:', error);
-      alert('Erreur lors de la suppression');
+      console.error("Error deleting product:", error);
+      alert("Erreur lors de la suppression");
     }
   };
 
-  const toggleProductAvailability = async (productId: number, isAvailable: boolean) => {
+  const toggleProductAvailability = async (
+    productId: number,
+    isAvailable: boolean,
+  ) => {
     try {
       const response = await fetch(`/api/admin/products/${productId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ isAvailable: !isAvailable }),
       });
 
       if (response.ok) {
-        const updatedProduct = await response.json();
-        setProducts(products.map(p =>
-          p.id === productId ? updatedProduct : p
-        ));
+        const updatedProduct = (await response.json()) as Product;
+        setProducts(
+          products.map((p) => (p.id === productId ? updatedProduct : p)),
+        );
       }
     } catch (error) {
-      console.error('Error updating product:', error);
+      console.error("Error updating product:", error);
     }
   };
 
   const filteredProducts = selectedCategory
-    ? products.filter(product => product.category === selectedCategory)
+    ? products.filter((product) => product.category === selectedCategory)
     : products;
 
   const categories = [
-    { value: 'burger', label: 'Burgers' },
-    { value: 'side', label: 'Accompagnements' },
-    { value: 'drink', label: 'Boissons' },
-    { value: 'dessert', label: 'Desserts' },
+    { value: "burger", label: "Burgers" },
+    { value: "side", label: "Accompagnements" },
+    { value: "drink", label: "Boissons" },
+    { value: "dessert", label: "Desserts" },
   ];
 
-  if (status === 'loading' || loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen">
         <Header title="Produits" showBack backHref="/admin/dashboard" />
@@ -107,7 +110,7 @@ export default function AdminProductsPage() {
     );
   }
 
-  if (!session || session.user.role !== 'admin') {
+  if (!session || session.user.role !== "admin") {
     return null;
   }
 
@@ -133,23 +136,25 @@ export default function AdminProductsPage() {
               onClick={() => setSelectedCategory(null)}
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                 selectedCategory === null
-                  ? 'bg-orange-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? "bg-orange-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               Tout ({products.length})
             </button>
 
             {categories.map((category) => {
-              const count = products.filter(p => p.category === category.value).length;
+              const count = products.filter(
+                (p) => p.category === category.value,
+              ).length;
               return (
                 <button
                   key={category.value}
                   onClick={() => setSelectedCategory(category.value)}
                   className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
                     selectedCategory === category.value
-                      ? 'bg-orange-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? "bg-orange-600 text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }`}
                 >
                   {category.label} ({count})
@@ -177,7 +182,10 @@ export default function AdminProductsPage() {
             </div>
           ) : (
             filteredProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div
+                key={product.id}
+                className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+              >
                 <div className="flex">
                   {/* Image */}
                   <div className="w-20 h-20 bg-gray-100 flex-shrink-0">
@@ -216,24 +224,37 @@ export default function AdminProductsPage() {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-1 text-xs rounded-full ${
-                          product.category === 'burger' ? 'bg-red-100 text-red-800' :
-                          product.category === 'side' ? 'bg-yellow-100 text-yellow-800' :
-                          product.category === 'drink' ? 'bg-blue-100 text-blue-800' :
-                          'bg-purple-100 text-purple-800'
-                        }`}>
-                          {categories.find(c => c.value === product.category)?.label}
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${
+                            product.category === "burger"
+                              ? "bg-red-100 text-red-800"
+                              : product.category === "side"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : product.category === "drink"
+                                  ? "bg-blue-100 text-blue-800"
+                                  : "bg-purple-100 text-purple-800"
+                          }`}
+                        >
+                          {
+                            categories.find((c) => c.value === product.category)
+                              ?.label
+                          }
                         </span>
 
                         <button
-                          onClick={() => toggleProductAvailability(product.id, product.isAvailable)}
+                          onClick={() =>
+                            toggleProductAvailability(
+                              product.id,
+                              product.isAvailable,
+                            )
+                          }
                           className={`px-2 py-1 text-xs rounded-full transition-colors ${
                             product.isAvailable
-                              ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                              : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                              ? "bg-green-100 text-green-800 hover:bg-green-200"
+                              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
                           }`}
                         >
-                          {product.isAvailable ? 'Disponible' : 'Indisponible'}
+                          {product.isAvailable ? "Disponible" : "Indisponible"}
                         </button>
                       </div>
 
@@ -254,7 +275,8 @@ export default function AdminProductsPage() {
                     {product.ingredients && product.ingredients.length > 0 && (
                       <div className="mt-2 pt-2 border-t border-gray-100">
                         <p className="text-xs text-gray-500">
-                          Ingrédients: {product.ingredients.map(i => i.name).join(', ')}
+                          Ingrédients:{" "}
+                          {product.ingredients.map((i) => i.name).join(", ")}
                         </p>
                       </div>
                     )}

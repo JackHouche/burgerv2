@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { formatDate, formatTime } from '@/lib/utils';
-import { Button } from '@/components/ui/Button';
-import { Calendar, Clock } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { formatDate, formatTime } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { Calendar, Clock } from "lucide-react";
 
 interface TimeSlot {
   time: string;
@@ -21,7 +21,11 @@ interface TimeSlotPickerProps {
   onSlotSelect: (date: string, time: string) => void;
 }
 
-export function TimeSlotPicker({ selectedDate, selectedTime, onSlotSelect }: TimeSlotPickerProps) {
+export function TimeSlotPicker({
+  selectedDate,
+  selectedTime,
+  onSlotSelect,
+}: TimeSlotPickerProps) {
   const [availableSlots, setAvailableSlots] = useState<DaySlots[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<DaySlots | null>(null);
@@ -32,19 +36,21 @@ export function TimeSlotPicker({ selectedDate, selectedTime, onSlotSelect }: Tim
 
   const fetchAvailableSlots = async () => {
     try {
-      const response = await fetch('/api/slots');
+      const response = await fetch("/api/slots");
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as DaySlots[];
         setAvailableSlots(data);
 
         // Sélectionner automatiquement le premier jour avec des créneaux disponibles
-        const firstAvailableDay = data.find((day: DaySlots) => day.slots.length > 0);
+        const firstAvailableDay = data.find(
+          (day: DaySlots) => day.slots.length > 0,
+        );
         if (firstAvailableDay && !selectedDay) {
           setSelectedDay(firstAvailableDay);
         }
       }
     } catch (error) {
-      console.error('Error fetching slots:', error);
+      console.error("Error fetching slots:", error);
     } finally {
       setLoading(false);
     }
@@ -93,18 +99,17 @@ export function TimeSlotPicker({ selectedDate, selectedTime, onSlotSelect }: Tim
               disabled={day.slots.length === 0}
               className={`p-3 text-left rounded-lg border transition-colors ${
                 selectedDay?.date === day.date
-                  ? 'border-orange-600 bg-orange-50 text-orange-600'
+                  ? "border-orange-600 bg-orange-50 text-orange-600"
                   : day.slots.length === 0
-                  ? 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
-                  : 'border-gray-200 hover:border-gray-300 text-gray-900'
+                    ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    : "border-gray-200 hover:border-gray-300 text-gray-900"
               }`}
             >
               <div className="font-medium">{formatDate(day.date)}</div>
               <div className="text-sm text-gray-500">
                 {day.slots.length > 0
                   ? `${day.slots.length} créneaux disponibles`
-                  : 'Aucun créneau disponible'
-                }
+                  : "Aucun créneau disponible"}
               </div>
             </button>
           ))}
@@ -125,11 +130,12 @@ export function TimeSlotPicker({ selectedDate, selectedTime, onSlotSelect }: Tim
                 onClick={() => handleTimeSelect(slot.time)}
                 disabled={!slot.isAvailable}
                 className={`p-2 text-sm rounded-lg border transition-colors ${
-                  selectedDate === selectedDay.date && selectedTime === slot.time
-                    ? 'border-orange-600 bg-orange-600 text-white'
+                  selectedDate === selectedDay.date &&
+                  selectedTime === slot.time
+                    ? "border-orange-600 bg-orange-600 text-white"
                     : slot.isAvailable
-                    ? 'border-gray-200 hover:border-orange-300 text-gray-900'
-                    : 'border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed'
+                      ? "border-gray-200 hover:border-orange-300 text-gray-900"
+                      : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 {formatTime(slot.time)}

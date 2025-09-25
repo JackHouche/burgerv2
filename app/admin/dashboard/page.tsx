@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/ui/Header";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
 import {
@@ -64,13 +64,12 @@ export default function AdminDashboardPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen">
-        <Header title="Tableau de bord" />
-        <div className="p-4 text-center">
+      <AdminLayout title="Tableau de bord">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
           <p className="mt-2 text-gray-600">Chargement...</p>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
@@ -79,17 +78,8 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header
-        title="Tableau de bord"
-        rightElement={
-          <Link href="/admin/settings">
-            <Settings className="w-6 h-6 text-gray-600" />
-          </Link>
-        }
-      />
-
-      <div className="p-4 space-y-6">
+    <AdminLayout title="Tableau de bord">
+      <div className="space-y-6">
         {/* Bienvenue */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h1 className="text-xl font-bold text-gray-900 mb-2">
@@ -248,6 +238,6 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

@@ -19,7 +19,7 @@ export function CategoryFilter({
   const categories = Object.values(PRODUCT_CATEGORIES);
 
   return (
-    <div className="sticky top-[73px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+    <div className="sticky top-[129px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
       <div className="px-4 py-4">
         <div className="flex gap-3 overflow-x-auto scrollbar-hide">
           <button

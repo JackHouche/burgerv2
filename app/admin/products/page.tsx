@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/ui/Header";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
 import { Product } from "@/types";
@@ -100,13 +100,12 @@ export default function AdminProductsPage() {
 
   if (status === "loading" || loading) {
     return (
-      <div className="min-h-screen">
-        <Header title="Produits" showBack backHref="/admin/dashboard" />
-        <div className="p-4 text-center">
+      <AdminLayout title="Gestion des produits">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
           <p className="mt-2 text-gray-600">Chargement...</p>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 

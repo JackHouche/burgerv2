@@ -7,6 +7,8 @@ import { Product } from "@/types";
 import { useCartHydrated } from "@/hooks/useCart";
 import { Header } from "@/components/ui/Header";
 import { Navigation } from "@/components/ui/Navigation";
+import { SearchBar } from "@/components/ui/SearchBar";
+import { FloatingCart } from "@/components/ui/FloatingCart";
 import { CategoryFilter } from "@/components/products/CategoryFilter";
 import { ProductCard } from "@/components/products/ProductCard";
 import { formatPrice } from "@/lib/utils";
@@ -14,6 +16,7 @@ import { formatPrice } from "@/lib/utils";
 export default function MenuPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const { addItem } = useCartHydrated();
 
@@ -35,9 +38,16 @@ export default function MenuPage() {
     }
   };
 
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
-    : products;
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory
+      ? product.category === selectedCategory
+      : true;
+    const matchesSearch =
+      searchQuery === "" ||
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const handleAddToCart = (product: Product) => {
     try {
@@ -108,6 +118,12 @@ export default function MenuPage() {
         subtitle="Commandez en ligne, récupérez sur place"
       />
 
+      <SearchBar
+        placeholder="Rechercher un produit..."
+        onSearch={setSearchQuery}
+        value={searchQuery}
+      />
+
       <CategoryFilter
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
@@ -165,6 +181,7 @@ export default function MenuPage() {
       </div>
 
       <Navigation />
+      <FloatingCart />
     </div>
   );
 }

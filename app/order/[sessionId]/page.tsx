@@ -1,13 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { Header } from '@/components/ui/Header';
-import { Button } from '@/components/ui/Button';
-import { formatPrice, formatDate, formatTime } from '@/lib/utils';
-import { CheckCircle, Clock, MapPin } from 'lucide-react';
-import { Order } from '@/types';
-import Link from 'next/link';
+export const runtime = "edge";
+
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { Header } from "@/components/ui/Header";
+import { Button } from "@/components/ui/Button";
+import { formatPrice, formatDate, formatTime } from "@/lib/utils";
+import { CheckCircle, Clock, MapPin } from "lucide-react";
+import { Order } from "@/types";
+import Link from "next/link";
 
 export default function OrderConfirmationPage() {
   const params = useParams();
@@ -29,7 +31,7 @@ export default function OrderConfirmationPage() {
       // Pour l'instant, on simule avec des données
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching order:', error);
+      console.error("Error fetching order:", error);
       setLoading(false);
     }
   };
@@ -48,17 +50,22 @@ export default function OrderConfirmationPage() {
 
   // Version de démonstration avec des données simulées
   const mockOrder = {
-    orderNumber: 'CMD' + sessionId.slice(-8).toUpperCase(),
-    customerName: 'Client Test',
-    status: 'confirmed',
-    totalAmount: 24.90,
-    pickupDate: new Date().toISOString().split('T')[0],
-    pickupTime: '19:00',
+    orderNumber: "CMD" + sessionId.slice(-8).toUpperCase(),
+    customerName: "Client Test",
+    status: "confirmed",
+    totalAmount: 24.9,
+    pickupDate: new Date().toISOString().split("T")[0],
+    pickupTime: "19:00",
     items: [
-      { productName: 'Burger Classic', quantity: 1, unitPrice: 12.50, subtotal: 12.50 },
-      { productName: 'Frites', quantity: 1, unitPrice: 4.90, subtotal: 4.90 },
-      { productName: 'Coca Cola', quantity: 1, unitPrice: 2.50, subtotal: 2.50 }
-    ]
+      {
+        productName: "Burger Classic",
+        quantity: 1,
+        unitPrice: 12.5,
+        subtotal: 12.5,
+      },
+      { productName: "Frites", quantity: 1, unitPrice: 4.9, subtotal: 4.9 },
+      { productName: "Coca Cola", quantity: 1, unitPrice: 2.5, subtotal: 2.5 },
+    ],
   };
 
   return (
@@ -73,11 +80,13 @@ export default function OrderConfirmationPage() {
             Commande confirmée !
           </h1>
           <p className="text-gray-600 mb-4">
-            Votre paiement a été accepté et votre commande est en cours de préparation.
+            Votre paiement a été accepté et votre commande est en cours de
+            préparation.
           </p>
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
             <p className="text-sm text-orange-800">
-              <span className="font-semibold">Numéro de commande:</span><br />
+              <span className="font-semibold">Numéro de commande:</span>
+              <br />
               {mockOrder.orderNumber}
             </p>
           </div>
@@ -94,8 +103,12 @@ export default function OrderConfirmationPage() {
             <div className="flex items-center">
               <MapPin className="w-5 h-5 text-gray-400 mr-3" />
               <div>
-                <p className="font-medium text-gray-900">Restaurant Click & Collect</p>
-                <p className="text-sm text-gray-600">123 Rue de la Gastronomie, Paris</p>
+                <p className="font-medium text-gray-900">
+                  Restaurant Click & Collect
+                </p>
+                <p className="text-sm text-gray-600">
+                  123 Rue de la Gastronomie, Paris
+                </p>
               </div>
             </div>
 
@@ -103,7 +116,8 @@ export default function OrderConfirmationPage() {
               <Clock className="w-5 h-5 text-gray-400 mr-3" />
               <div>
                 <p className="font-medium text-gray-900">
-                  {formatDate(mockOrder.pickupDate)} à {formatTime(mockOrder.pickupTime)}
+                  {formatDate(mockOrder.pickupDate)} à{" "}
+                  {formatTime(mockOrder.pickupTime)}
                 </p>
                 <p className="text-sm text-gray-600">
                   Votre commande sera prête dans 20-30 minutes
@@ -116,15 +130,24 @@ export default function OrderConfirmationPage() {
         {/* Détail de la commande */}
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="font-semibold text-gray-900">Détail de la commande</h2>
+            <h2 className="font-semibold text-gray-900">
+              Détail de la commande
+            </h2>
           </div>
 
           <div className="divide-y divide-gray-200">
             {mockOrder.items.map((item, index) => (
-              <div key={index} className="p-4 flex justify-between items-center">
+              <div
+                key={index}
+                className="p-4 flex justify-between items-center"
+              >
                 <div>
-                  <p className="font-medium text-gray-900">{item.productName}</p>
-                  <p className="text-sm text-gray-600">Quantité: {item.quantity}</p>
+                  <p className="font-medium text-gray-900">
+                    {item.productName}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    Quantité: {item.quantity}
+                  </p>
                 </div>
                 <span className="font-semibold text-gray-900">
                   {formatPrice(item.subtotal)}

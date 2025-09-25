@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { getDb } from "@/lib/db/client";
 import { orders, orderItems } from "@/lib/db/schema";
 import { eq, desc } from "drizzle-orm";
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     // Récupérer les articles pour chaque commande
     const ordersWithItems = await Promise.all(
-      allOrders.map(async (order) => {
+      allOrders.map(async (order: any) => {
         const items = await db
           .select()
           .from(orderItems)

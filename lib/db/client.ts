@@ -16,17 +16,18 @@ export function getCloudflareDb(d1: any) {
 
 // Client unifié qui détecte l'environnement
 export function getDb() {
-  // Développement local
-  if (process.env.NODE_ENV === "development") {
-    return getLocalDb();
+  // Sur Cloudflare Pages/Workers avec next-on-pages
+  if (typeof process !== "undefined" && process.env.CF_PAGES === "1") {
+    // Utiliser le client Cloudflare spécialement conçu pour next-on-pages
+    try {
+      const { getCloudflareDb } = require("./cloudflare-client");
+      return getCloudflareDb();
+    } catch (error) {
+      console.error("Failed to get Cloudflare DB client:", error);
+      throw error;
+    }
   }
 
-  // Cloudflare Pages - D1 accessible via process.env.DB
-  if (typeof process !== "undefined" && process.env.DB) {
-    return getCloudflareDb(process.env.DB as any);
-  }
-
-  // Fallback vers local si aucun environnement détecté
-  console.warn("No D1 binding found, falling back to local database");
+  // Développement local ou autres environnements
   return getLocalDb();
 }

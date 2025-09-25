@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { getDb } from "@/lib/db/client";
 import { products, ingredients } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";

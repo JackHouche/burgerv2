@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/hooks/useCart';
-import { Header } from '@/components/ui/Header';
-import { Navigation } from '@/components/ui/Navigation';
-import { CartItem } from '@/components/cart/CartItem';
-import { TimeSlotPicker } from '@/components/cart/TimeSlotPicker';
-import { Button } from '@/components/ui/Button';
-import { formatPrice } from '@/lib/utils';
-import { ShoppingBag } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/useCart";
+import { Header } from "@/components/ui/Header";
+import { Navigation } from "@/components/ui/Navigation";
+import { CartItem } from "@/components/cart/CartItem";
+import { TimeSlotPicker } from "@/components/cart/TimeSlotPicker";
+import { Button } from "@/components/ui/Button";
+import { formatPrice } from "@/lib/utils";
+import { ShoppingBag } from "lucide-react";
+import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -20,16 +22,20 @@ export default function CheckoutPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    notes: ''
+    name: "",
+    email: "",
+    phone: "",
+    notes: "",
   });
   const [loading, setLoading] = useState(false);
 
   const total = getTotal();
-  const canProceed = items.length > 0 && selectedDate && selectedTime &&
-                    customerInfo.name.trim() && customerInfo.email.trim();
+  const canProceed =
+    items.length > 0 &&
+    selectedDate &&
+    selectedTime &&
+    customerInfo.name.trim() &&
+    customerInfo.email.trim();
 
   const handleSlotSelect = (date: string, time: string) => {
     setSelectedDate(date);
@@ -37,7 +43,7 @@ export default function CheckoutPage() {
   };
 
   const handleCustomerInfoChange = (field: string, value: string) => {
-    setCustomerInfo(prev => ({ ...prev, [field]: value }));
+    setCustomerInfo((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCheckout = async () => {
@@ -52,41 +58,44 @@ export default function CheckoutPage() {
         pickupDate: selectedDate!,
         pickupTime: selectedTime!,
         notes: customerInfo.notes,
-        items: items.map(item => ({
+        items: items.map((item) => ({
           productId: item.product.id,
           productName: item.product.name,
           quantity: item.quantity,
           unitPrice: item.product.price,
-          customizations: item.customizations.removedIngredients.length > 0
-            ? `Sans: ${item.customizations.removedIngredients.join(', ')}`
-            : undefined
-        }))
+          customizations:
+            item.customizations.removedIngredients.length > 0
+              ? `Sans: ${item.customizations.removedIngredients.join(", ")}`
+              : undefined,
+        })),
       };
 
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
+      const response = await fetch("/api/stripe/checkout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ orderData }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create checkout session');
+        throw new Error("Failed to create checkout session");
       }
 
-      const { sessionId } = await response.json();
+      const data = (await response.json()) as { sessionId: string };
       const stripe = await stripePromise;
 
       if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: data.sessionId,
+        });
         if (error) {
-          console.error('Stripe error:', error);
+          console.error("Stripe error:", error);
         }
       }
     } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Erreur lors du paiement. Veuillez réessayer.');
+      console.error("Checkout error:", error);
+      alert("Erreur lors du paiement. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
@@ -105,9 +114,7 @@ export default function CheckoutPage() {
           <p className="text-gray-600 text-center mb-6">
             Ajoutez des produits à votre panier pour continuer
           </p>
-          <Button onClick={() => router.push('/')}>
-            Voir le menu
-          </Button>
+          <Button onClick={() => router.push("/")}>Voir le menu</Button>
         </div>
 
         <Navigation />
@@ -164,7 +171,9 @@ export default function CheckoutPage() {
               <input
                 type="text"
                 value={customerInfo.name}
-                onChange={(e) => handleCustomerInfoChange('name', e.target.value)}
+                onChange={(e) =>
+                  handleCustomerInfoChange("name", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Votre nom"
               />
@@ -177,7 +186,9 @@ export default function CheckoutPage() {
               <input
                 type="email"
                 value={customerInfo.email}
-                onChange={(e) => handleCustomerInfoChange('email', e.target.value)}
+                onChange={(e) =>
+                  handleCustomerInfoChange("email", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="votre@email.com"
               />
@@ -190,7 +201,9 @@ export default function CheckoutPage() {
               <input
                 type="tel"
                 value={customerInfo.phone}
-                onChange={(e) => handleCustomerInfoChange('phone', e.target.value)}
+                onChange={(e) =>
+                  handleCustomerInfoChange("phone", e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="06 12 34 56 78"
               />
@@ -202,7 +215,9 @@ export default function CheckoutPage() {
               </label>
               <textarea
                 value={customerInfo.notes}
-                onChange={(e) => handleCustomerInfoChange('notes', e.target.value)}
+                onChange={(e) =>
+                  handleCustomerInfoChange("notes", e.target.value)
+                }
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="Instructions particulières..."

@@ -3,13 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartHydrated } from "@/hooks/useCart";
-import { ShoppingBag, Home, User, Phone } from "lucide-react";
+import { ShoppingBag, Home, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 export function Navigation() {
   const { getItemCount, isHydrated } = useCartHydrated();
   const [itemCount, setItemCount] = useState(0);
   const pathname = usePathname();
+
   useEffect(() => {
     if (isHydrated) {
       setItemCount(getItemCount());
@@ -19,120 +20,53 @@ export function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <>
-      {/* Block B contact info */}
-      <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-md px-4 z-40">
-        <div className="bg-blockb-gold-500/90 backdrop-blur-md rounded-full px-4 py-2 text-center">
-          <div className="flex items-center justify-center space-x-2">
-            <Phone className="w-4 h-4 text-blockb-dark" />
-            <span className="font-blockb font-black text-blockb-dark text-sm">
-              02.77.24.85.66
-            </span>
-          </div>
+    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-gray-100 shadow-2xl z-50">
+      <div className="px-6 py-3">
+        <div className="flex justify-around items-center">
+          <Link
+            href="/"
+            className={`relative flex flex-col items-center py-2.5 px-5 rounded-2xl transition-all duration-200 group ${
+              isActive("/")
+                ? "text-orange-600 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+            }`}
+          >
+            <Home className={`w-6 h-6 transition-transform duration-200 ${isActive("/") ? "scale-110" : "group-hover:scale-110"}`} />
+            <span className="text-xs mt-1.5 font-semibold">Menu</span>
+          </Link>
+
+          <Link
+            href="/checkout"
+            className={`relative flex flex-col items-center py-2.5 px-5 rounded-2xl transition-all duration-200 group ${
+              isActive("/checkout")
+                ? "text-orange-600 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+            }`}
+          >
+            <div className="relative">
+              <ShoppingBag className={`w-6 h-6 transition-transform duration-200 ${isActive("/checkout") ? "scale-110" : "group-hover:scale-110"}`} />
+              {isHydrated && itemCount > 0 && (
+                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-lg animate-pulse">
+                  {itemCount}
+                </div>
+              )}
+            </div>
+            <span className="text-xs mt-1.5 font-semibold">Panier</span>
+          </Link>
+
+          <Link
+            href="/admin/login"
+            className={`relative flex flex-col items-center py-2.5 px-5 rounded-2xl transition-all duration-200 group ${
+              pathname.startsWith("/admin")
+                ? "text-orange-600 bg-gradient-to-br from-orange-50 to-orange-100 scale-105"
+                : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+            }`}
+          >
+            <User className={`w-6 h-6 transition-transform duration-200 ${pathname.startsWith("/admin") ? "scale-110" : "group-hover:scale-110"}`} />
+            <span className="text-xs mt-1.5 font-semibold">Admin</span>
+          </Link>
         </div>
       </div>
-
-      {/* Main navigation */}
-      <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-blockb-dark/95 backdrop-blur-md border-t border-blockb-orange/30 shadow-dark z-50">
-        {/* Decorative top border */}
-        <div className="h-0.5 bg-gradient-to-r from-blockb-orange-500 via-blockb-gold-500 to-blockb-orange-500"></div>
-
-        <div className="px-4 py-3 blockb-texture">
-          <div className="flex justify-around items-center">
-            <Link
-              href="/"
-              className={`flex flex-col items-center py-2 px-3 transition-all duration-300 hover:scale-110 active:scale-95 relative group ${
-                isActive("/")
-                  ? "text-blockb-orange-500 blockb-text-glow"
-                  : "text-blockb-cream hover:text-blockb-orange-500"
-              }`}
-            >
-              <div className="relative">
-                <Home className="w-6 h-6 transition-transform duration-300 group-hover:animate-bounce-subtle" />
-                {isActive("/") && (
-                  <div className="absolute -inset-2 bg-blockb-orange-500/20 rounded-full animate-pulse"></div>
-                )}
-              </div>
-              <span className="text-xs mt-1 font-blockb-body font-bold">
-                Menu
-              </span>
-
-              {/* Block B decorative dots */}
-              {isActive("/") && (
-                <div className="absolute -bottom-1 flex space-x-1">
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-gold-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                </div>
-              )}
-            </Link>
-
-            <Link
-              href="/checkout"
-              className={`flex flex-col items-center py-2 px-3 transition-all duration-300 hover:scale-110 active:scale-95 relative group ${
-                isActive("/checkout")
-                  ? "text-blockb-orange-500 blockb-text-glow"
-                  : "text-blockb-cream hover:text-blockb-orange-500"
-              }`}
-            >
-              <div className="relative">
-                <ShoppingBag className="w-6 h-6 transition-transform duration-300 group-hover:animate-bounce-subtle" />
-
-                {/* Cart count badge */}
-                {isHydrated && itemCount > 0 && (
-                  <div className="absolute -top-2 -right-2 bg-blockb-gold-500 text-blockb-dark text-xs rounded-full w-5 h-5 flex items-center justify-center font-blockb font-black shadow-gold animate-pulse-orange">
-                    {itemCount}
-                  </div>
-                )}
-
-                {isActive("/checkout") && (
-                  <div className="absolute -inset-2 bg-blockb-orange-500/20 rounded-full animate-pulse"></div>
-                )}
-              </div>
-              <span className="text-xs mt-1 font-blockb-body font-bold">
-                Panier
-              </span>
-
-              {/* Block B decorative dots */}
-              {isActive("/checkout") && (
-                <div className="absolute -bottom-1 flex space-x-1">
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-gold-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                </div>
-              )}
-            </Link>
-
-            <Link
-              href="/admin/login"
-              className={`flex flex-col items-center py-2 px-3 transition-all duration-300 hover:scale-110 active:scale-95 relative group ${
-                pathname.startsWith("/admin")
-                  ? "text-blockb-orange-500 blockb-text-glow"
-                  : "text-blockb-cream hover:text-blockb-orange-500"
-              }`}
-            >
-              <div className="relative">
-                <User className="w-6 h-6 transition-transform duration-300 group-hover:animate-bounce-subtle" />
-                {pathname.startsWith("/admin") && (
-                  <div className="absolute -inset-2 bg-blockb-orange-500/20 rounded-full animate-pulse"></div>
-                )}
-              </div>
-              <span className="text-xs mt-1 font-blockb-body font-bold">
-                Admin
-              </span>
-
-              {/* Block B decorative dots */}
-              {pathname.startsWith("/admin") && (
-                <div className="absolute -bottom-1 flex space-x-1">
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-gold-500 rounded-full"></div>
-                  <div className="w-1 h-1 bg-blockb-orange-500 rounded-full"></div>
-                </div>
-              )}
-            </Link>
-          </div>
-        </div>
-      </nav>
-    </>
+    </nav>
   );
 }

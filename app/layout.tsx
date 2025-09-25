@@ -7,8 +7,17 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Click & Collect Restaurant",
+  title: "Block B - Click & Collect",
   description: "Commandez en ligne et récupérez vos plats préférés",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
+  openGraph: {
+    title: "Block B - Click & Collect",
+    description: "Commandez en ligne et récupérez vos plats préférés",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
@@ -18,9 +27,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={cn(inter.className, "min-h-screen bg-gray-50")}>
+      <body className={cn(inter.className, "min-h-screen bg-white")}>
         <Providers>
-          <main className="max-w-md mx-auto bg-white min-h-screen relative">
+          <main className="max-w-md mx-auto bg-white min-h-screen relative shadow-xl">
             {children}
           </main>
         </Providers>

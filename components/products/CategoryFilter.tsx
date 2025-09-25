@@ -19,58 +19,36 @@ export function CategoryFilter({
   const categories = Object.values(PRODUCT_CATEGORIES);
 
   return (
-    <div className="sticky top-[73px] z-30 bg-blockb-dark/95 backdrop-blur-md border-b border-blockb-gold/20 shadow-lg">
-      {/* Decorative top border */}
-      <div className="h-1 bg-gradient-to-r from-transparent via-blockb-gold to-transparent opacity-60"></div>
-
-      <div className="px-4 py-4 relative">
-        {/* Street food texture overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="h-full bg-[radial-gradient(circle_at_25%_25%,_#f59e0b_1px,_transparent_1px),_radial-gradient(circle_at_75%_75%,_#f59e0b_1px,_transparent_1px)] bg-[length:20px_20px]"></div>
-        </div>
-
-        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide relative">
+    <div className="sticky top-[73px] z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+      <div className="px-4 py-4">
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide">
           <button
             onClick={() => onCategoryChange(null)}
-            className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 transform hover:scale-105 active:scale-95 relative group ${
+            className={`px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
               selectedCategory === null
-                ? "bg-gradient-to-r from-blockb-gold via-amber-500 to-blockb-gold text-blockb-dark shadow-xl shadow-blockb-gold/30 animate-pulse-gold"
-                : "bg-blockb-darker/80 text-blockb-gold-light hover:bg-blockb-darker border border-blockb-gold/30 hover:border-blockb-gold/50 hover:shadow-lg hover:shadow-blockb-gold/20"
+                ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md scale-105"
+                : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-gray-200"
             }`}
           >
-            <span className="text-lg drop-shadow-sm">🍽️</span>
-            <span className="drop-shadow-sm">Tout</span>
-            {selectedCategory === null && (
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shine"></div>
-            )}
+            ✨ Tout voir
           </button>
 
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold whitespace-nowrap transition-all duration-300 transform hover:scale-105 active:scale-95 relative group ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                 selectedCategory === category
-                  ? "bg-gradient-to-r from-blockb-gold via-amber-500 to-blockb-gold text-blockb-dark shadow-xl shadow-blockb-gold/30 animate-pulse-gold"
-                  : "bg-blockb-darker/80 text-blockb-gold-light hover:bg-blockb-darker border border-blockb-gold/30 hover:border-blockb-gold/50 hover:shadow-lg hover:shadow-blockb-gold/20"
+                  ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md scale-105"
+                  : "bg-white text-gray-600 hover:text-gray-900 hover:bg-gray-50 border border-gray-200"
               }`}
             >
-              <span className="text-lg drop-shadow-sm">
-                {categoryLabels[category].icon}
-              </span>
-              <span className="drop-shadow-sm">
-                {categoryLabels[category].label}
-              </span>
-              {selectedCategory === category && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shine"></div>
-              )}
+              <span className="text-lg">{categoryLabels[category].icon}</span>
+              <span>{categoryLabels[category].label}</span>
             </button>
           ))}
         </div>
       </div>
-
-      {/* Decorative bottom accent */}
-      <div className="h-0.5 bg-gradient-to-r from-transparent via-blockb-gold/40 to-transparent"></div>
     </div>
   );
 }

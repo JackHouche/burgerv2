@@ -2,8 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import { Button } from "@/components/ui/Button";
-import { Plus, Clock, Star, Flame } from "lucide-react";
+import { Plus, Clock } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -25,138 +24,94 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blockb-darker to-blockb-dark rounded-2xl border border-blockb-gold/20 overflow-hidden transition-all duration-500 hover:border-blockb-gold/50 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blockb-gold/20 group relative">
-      {/* Street texture overlay */}
-      <div className="absolute inset-0 opacity-5 z-0">
-        <div className="h-full bg-[radial-gradient(circle_at_25%_25%,_#f59e0b_1px,_transparent_1px),_radial-gradient(circle_at_75%_75%,_#f59e0b_1px,_transparent_1px)] bg-[length:15px_15px]"></div>
-      </div>
-
-      {/* Glow effect on hover */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-blockb-gold via-amber-500 to-blockb-gold rounded-2xl blur opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-
+    <div className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
       {/* Image Container */}
-      <div className="relative h-48 bg-gradient-to-br from-blockb-darker via-zinc-800 to-blockb-dark overflow-hidden">
+      <div className="relative h-40 sm:h-48 bg-gradient-to-br from-orange-50 to-orange-100 flex-shrink-0 overflow-hidden">
         {product.imageUrl && !imageError ? (
           <Image
             src={product.imageUrl}
             alt={product.name}
             fill
-            className="object-cover transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center h-full text-blockb-gold-light">
-            <div className="w-16 h-16 bg-blockb-gold/20 rounded-full flex items-center justify-center mb-2 border border-blockb-gold/30">
-              <span className="text-2xl">🍔</span>
-            </div>
-            <span className="text-sm font-medium">Image non disponible</span>
+          <div className="flex items-center justify-center h-full">
+            <Image
+              src="/logo.png"
+              alt={product.name}
+              width={60}
+              height={60}
+              className="object-contain opacity-30"
+            />
           </div>
         )}
 
         {/* Availability Overlay */}
         {!product.isAvailable && (
-          <div className="absolute inset-0 bg-blockb-dark/90 backdrop-blur-sm flex flex-col items-center justify-center border-2 border-red-500/50">
-            <Clock className="w-8 h-8 text-red-400 mb-2" />
-            <span className="text-red-400 font-bold text-lg drop-shadow-lg">
-              Indisponible
-            </span>
-            <span className="text-red-300 text-sm">Temporairement</span>
+          <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center">
+            <Clock className="w-6 h-6 text-gray-400 mb-1" />
+            <span className="text-sm text-gray-600 font-medium">Indisponible</span>
           </div>
         )}
-
-        {/* Price Badge */}
-        <div className="absolute top-3 right-3 z-10">
-          <div className="bg-gradient-to-r from-blockb-gold via-amber-500 to-blockb-gold rounded-xl px-3 py-2 shadow-xl border border-amber-400/50 relative">
-            <span className="text-blockb-dark font-bold text-lg drop-shadow-sm">
-              {formatPrice(product.price)}
-            </span>
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Category Badge */}
-        <div className="absolute top-3 left-3 z-10">
-          <div className="bg-blockb-dark/80 backdrop-blur-sm rounded-lg px-3 py-1 border border-blockb-gold/30 shadow-lg">
-            <span className="text-blockb-gold text-xs font-bold uppercase tracking-widest drop-shadow-sm">
-              {product.category}
-            </span>
-          </div>
-        </div>
-
-        {/* Hot indicator for popular items */}
-        <div className="absolute bottom-3 left-3 z-10">
-          <div className="bg-red-500/20 backdrop-blur-sm rounded-lg px-2 py-1 border border-red-500/40 flex items-center gap-1">
-            <Flame className="w-3 h-3 text-red-400 animate-pulse" />
-            <span className="text-red-400 text-xs font-bold">POPULAIRE</span>
-          </div>
-        </div>
       </div>
 
       {/* Content */}
-      <div className="p-5 relative z-10">
+      <div className="p-5 flex flex-col flex-grow">
         {/* Header */}
-        <div className="mb-3">
-          <h3 className="font-bold text-blockb-gold-light text-lg leading-tight mb-1 group-hover:text-blockb-gold transition-colors duration-300 drop-shadow-sm">
-            {product.name}
-          </h3>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className="w-4 h-4 fill-blockb-gold text-blockb-gold drop-shadow-sm"
-              />
-            ))}
-            <span className="text-sm text-blockb-gold-muted ml-1">(4.8)</span>
-          </div>
-        </div>
+        <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
+          {product.name}
+        </h3>
 
         {/* Description */}
         {product.description && (
-          <p className="text-blockb-gold-muted text-sm leading-relaxed mb-4 line-clamp-2">
+          <p className="text-sm text-gray-500 mb-3 line-clamp-2 leading-relaxed">
             {product.description}
           </p>
         )}
 
-        {/* Ingredients */}
+        {/* Ingredients - Simplified */}
         {product.ingredients && product.ingredients.length > 0 && (
-          <div className="mb-4">
-            <p className="text-xs font-bold text-blockb-gold uppercase tracking-widest mb-2 flex items-center gap-1">
-              <span className="w-1 h-1 bg-blockb-gold rounded-full"></span>
-              Ingrédients
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {product.ingredients.slice(0, 3).map((ingredient, index) => (
-                <span
-                  key={ingredient.id}
-                  className="inline-flex items-center px-2 py-1 rounded-lg text-xs bg-blockb-gold/10 text-blockb-gold-light border border-blockb-gold/20 hover:bg-blockb-gold/20 transition-colors"
-                >
-                  {ingredient.name}
-                </span>
-              ))}
-              {product.ingredients.length > 3 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-lg text-xs bg-blockb-gold/5 text-blockb-gold-muted border border-blockb-gold/10">
-                  +{product.ingredients.length - 3} autres
-                </span>
-              )}
-            </div>
+          <div className="text-xs text-gray-500 mb-3 line-clamp-1">
+            {product.ingredients.slice(0, 3).map(ing => ing.name).join(", ")}
+            {product.ingredients.length > 3 && ` +${product.ingredients.length - 3}`}
           </div>
         )}
 
-        {/* Action Button */}
-        <Button
-          onClick={handleAddToCart}
-          disabled={!product.isAvailable}
-          loading={isLoading}
-          fullWidth
-          size="md"
-          variant="primary"
-          className="font-bold text-sm tracking-wide relative overflow-hidden group/btn"
-        >
-          <Plus className="w-5 h-5 mr-2 group-hover/btn:rotate-90 transition-transform duration-300" />
-          Ajouter au panier
-        </Button>
+        {/* Spacer */}
+        <div className="flex-grow"></div>
+
+        {/* Price and Action */}
+        <div className="mt-auto">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-bold text-gray-900">
+                {formatPrice(product.price)}
+              </span>
+            </div>
+            {!product.isAvailable && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                Indisponible
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={handleAddToCart}
+            disabled={!product.isAvailable || isLoading}
+            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <Plus className="w-5 h-5" />
+                <span className="text-sm font-semibold">Ajouter au panier</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

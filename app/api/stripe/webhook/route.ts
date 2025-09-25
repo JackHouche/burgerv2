@@ -5,7 +5,6 @@ import { orders, orderItems, timeSlots } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { generateOrderNumber } from "@/lib/utils/orders";
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {

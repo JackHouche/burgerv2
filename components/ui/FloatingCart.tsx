@@ -67,15 +67,20 @@ export function FloatingCart() {
 
               <div className="space-y-3 max-h-40 overflow-y-auto">
                 {items.map((item) => (
-                  <div key={`${item.id}-${JSON.stringify(item.customizations)}`} className="flex items-center gap-3">
+                  <div
+                    key={`${item.product.id}-${JSON.stringify(item.customizations)}`}
+                    className="flex items-center gap-3"
+                  >
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">{item.name}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {item.product.name}
+                      </p>
                       <p className="text-xs text-gray-500">
-                        {item.quantity}x {formatPrice(item.price)}
+                        {item.quantity}x {formatPrice(item.product.price)}
                       </p>
                     </div>
                     <p className="text-sm font-semibold text-gray-900">
-                      {formatPrice(item.quantity * item.price)}
+                      {formatPrice(item.quantity * item.product.price)}
                     </p>
                   </div>
                 ))}

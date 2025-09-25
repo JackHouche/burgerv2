@@ -20,7 +20,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || session.role !== "admin") {
       router.push("/admin/login");
       return;
     }
@@ -110,7 +110,7 @@ export default function AdminProductsPage() {
     );
   }
 
-  if (!session || session.user.role !== "admin") {
+  if (!session || session.role !== "admin") {
     return null;
   }
 

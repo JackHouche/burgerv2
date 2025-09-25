@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session || session.user.role !== "admin") {
+    if (!session || session.role !== "admin") {
       router.push("/admin/login");
       return;
     }
@@ -93,7 +93,7 @@ export default function AdminDashboardPage() {
         {/* Bienvenue */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Bonjour, {session.user.name}
+            Bonjour, {session.name}
           </h1>
           <p className="text-gray-600">
             Voici un aperçu de votre restaurant aujourd'hui

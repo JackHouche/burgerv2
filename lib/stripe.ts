@@ -11,6 +11,8 @@ export const getStripe = (): Stripe => {
 
     stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2025-02-24.acacia",
+      // Use fetch-based HTTP client for Edge Runtime compatibility
+      httpClient: Stripe.createFetchHttpClient(),
     });
   }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { z } from "zod";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 const createCheckoutSchema = z.object({

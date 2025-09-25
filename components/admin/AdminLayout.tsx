@@ -68,7 +68,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 overflow-x-hidden">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -164,13 +164,13 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64 xl:pl-72">
+      <div className="lg:pl-64 xl:pl-72 min-w-0 flex-1">
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 max-w-full">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -186,7 +186,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="w-full p-4 sm:p-6">{children}</main>
+        <main className="w-full max-w-full p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

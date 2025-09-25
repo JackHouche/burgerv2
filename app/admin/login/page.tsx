@@ -33,14 +33,14 @@ export default function AdminLoginPage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = (await response.json()) as { user: { role: string } };
         if (data.user.role === "kitchen") {
           router.push("/kitchen");
         } else {
           router.push("/admin/dashboard");
         }
       } else {
-        const errorData = await response.json();
+        const errorData = (await response.json()) as { error: string };
         setError(errorData.error || "Email ou mot de passe incorrect");
       }
     } catch (error) {

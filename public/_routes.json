@@ -1,6 +1,0 @@
-{
-  "version": 1,
-  "description": "Routing configuration for Burger App",
-  "include": ["/*"],
-  "exclude": ["/_next/static/*"]
-}

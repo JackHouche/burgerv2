@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:build": "npx @cloudflare/next-on-pages && echo '{\"version\":1,\"description\":\"Fixed API routing\",\"include\":[\"/*\"],\"exclude\":[\"/_next/static/*\"]}' > .vercel/output/static/_routes.json",
     "start": "next start",
     "lint": "next lint",
     "db:migrate": "tsx scripts/migrate-db.ts",

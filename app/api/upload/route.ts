@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadImageToR2 } from "@/lib/r2/client";
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {

@@ -114,20 +114,15 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header
-        title="Gestion des produits"
-        showBack
-        backHref="/admin/dashboard"
-        rightElement={
-          <Button size="sm">
-            <Plus className="w-4 h-4 mr-1" />
-            Ajouter
+    <AdminLayout title="Gestion des produits">
+      <div className="space-y-6">
+        {/* Add Product Button */}
+        <div className="flex justify-end">
+          <Button onClick={() => setShowAddForm(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            Ajouter un produit
           </Button>
-        }
-      />
-
-      <div className="p-4 space-y-4">
+        </div>
         {/* Filtres par catégorie */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex gap-2 overflow-x-auto pb-2">
@@ -286,6 +281,6 @@ export default function AdminProductsPage() {
           )}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

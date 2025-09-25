@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db/client";
-import { timeSlots } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import {
   getAvailableDates,
   generateTimeSlots,
@@ -28,12 +25,10 @@ export async function GET(request: NextRequest) {
       date: queryDate || undefined,
     });
 
-    const db = getDb();
-
     if (validatedQuery.date) {
-      // Récupérer les créneaux pour une date específique
+      // Générer les créneaux disponibles pour une date spécifique
       const requestedDate = new Date(validatedQuery.date);
-      const availableSlots = await getAvailableSlotsForDate(db, requestedDate);
+      const availableSlots = generateMockSlotsForDate(requestedDate);
 
       return NextResponse.json({
         date: validatedQuery.date,
@@ -42,17 +37,15 @@ export async function GET(request: NextRequest) {
     } else {
       // Récupérer tous les créneaux disponibles pour les prochains jours
       const availableDates = getAvailableDates();
-      const allSlots = await Promise.all(
-        availableDates.map(async (date) => {
-          const dateStr = date.toISOString().split("T")[0];
-          const slots = await getAvailableSlotsForDate(db, date);
+      const allSlots = availableDates.map((date) => {
+        const dateStr = date.toISOString().split("T")[0];
+        const slots = generateMockSlotsForDate(date);
 
-          return {
-            date: dateStr,
-            slots: slots,
-          };
-        }),
-      );
+        return {
+          date: dateStr,
+          slots: slots,
+        };
+      });
 
       return NextResponse.json(allSlots);
     }
@@ -70,6 +63,21 @@ export async function GET(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+function generateMockSlotsForDate(date: Date) {
+  // Générer les créneaux disponibles sans base de données
+  const possibleSlots = generateTimeSlots(date);
+
+  // Filtrer les créneaux selon les règles métier
+  const availableSlots = possibleSlots
+    .filter((time) => isSlotAvailable(date, time))
+    .map((time) => ({
+      time,
+      isAvailable: true,
+    }));
+
+  return availableSlots;
 }
 
 async function getAvailableSlotsForDate(db: any, date: Date) {

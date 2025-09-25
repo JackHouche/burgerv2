@@ -1,53 +1,58 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { signIn, getSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/Button';
-import { Header } from '@/components/ui/Header';
-import { Lock, Mail } from 'lucide-react';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import { Header } from "@/components/ui/Header";
+import { Lock, Mail } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [credentials, setCredentials] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const result = await signIn('credentials', {
-        email: credentials.email,
-        password: credentials.password,
-        redirect: false,
+      const response = await fetch("/api/auth/nextauth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
       });
 
-      if (result?.error) {
-        setError('Email ou mot de passe incorrect');
-      } else {
-        const session = await getSession();
-        if (session?.user?.role === 'kitchen') {
-          router.push('/kitchen');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user.role === "kitchen") {
+          router.push("/kitchen");
         } else {
-          router.push('/admin/dashboard');
+          router.push("/admin/dashboard");
         }
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || "Email ou mot de passe incorrect");
       }
     } catch (error) {
-      setError('Une erreur est survenue');
+      setError("Une erreur est survenue");
     } finally {
       setLoading(false);
     }
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setCredentials(prev => ({ ...prev, [field]: value }));
-    setError('');
+    setCredentials((prev) => ({ ...prev, [field]: value }));
+    setError("");
   };
 
   return (
@@ -61,7 +66,9 @@ export default function AdminLoginPage() {
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-6 h-6 text-orange-600" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Administration</h1>
+              <h1 className="text-xl font-bold text-gray-900">
+                Administration
+              </h1>
               <p className="text-gray-600 mt-2">
                 Connectez-vous pour accéder à l'interface d'administration
               </p>
@@ -84,7 +91,7 @@ export default function AdminLoginPage() {
                     type="email"
                     required
                     value={credentials.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="admin@restaurant.com"
                   />
@@ -101,7 +108,9 @@ export default function AdminLoginPage() {
                     type="password"
                     required
                     value={credentials.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="••••••••"
                   />
@@ -131,8 +140,7 @@ export default function AdminLoginPage() {
               Comptes de démonstration:
             </p>
             <div className="text-xs text-blue-700 space-y-1">
-              <p>Admin: admin@demo.com / password123</p>
-              <p>Cuisine: kitchen@demo.com / password123</p>
+              <p>Admin: admin@demo.com / admin123</p>
             </div>
           </div>
         </div>

@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
     );
   }
 
-  if (!session || session.user.role !== "admin") {
+  if (!session || session.role !== "admin") {
     return null;
   }
 

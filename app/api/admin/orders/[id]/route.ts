@@ -5,6 +5,7 @@ import { orders, orderItems } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 const updateOrderSchema = z.object({

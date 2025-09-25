@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db/client";
 import { products, ingredients } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function GET(

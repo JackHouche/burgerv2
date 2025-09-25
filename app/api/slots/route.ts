@@ -9,6 +9,7 @@ import {
 } from "@/lib/utils/slots";
 import { z } from "zod";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 const getSlotsSchema = z.object({

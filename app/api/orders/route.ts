@@ -5,6 +5,7 @@ import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 import { generateOrderNumber, calculateOrderTotal } from "@/lib/utils/orders";
 
+export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 const createOrderSchema = z.object({

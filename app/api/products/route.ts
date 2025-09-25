@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { products, ingredients } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
+export const runtime = "edge";
+
 export async function GET() {
   try {
     // En développement local

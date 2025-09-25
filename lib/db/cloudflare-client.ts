@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/d1";
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import { getOptionalRequestContext } from "@cloudflare/next-on-pages";
 import * as schema from "./schema";
 
 // Interface pour l'environnement Cloudflare
@@ -11,7 +11,14 @@ interface CloudflareEnv {
 // Pour Cloudflare Pages avec Next-on-Pages
 export function getCloudflareDb() {
   try {
-    const { env } = getRequestContext() as any;
+    const requestContext = getOptionalRequestContext();
+    if (!requestContext) {
+      throw new Error(
+        "Request context not available (likely during static generation)",
+      );
+    }
+
+    const { env } = requestContext as any;
     if (!env.DB) {
       throw new Error("Database binding not found");
     }
@@ -25,7 +32,14 @@ export function getCloudflareDb() {
 // Pour R2
 export function getR2Bucket() {
   try {
-    const { env } = getRequestContext() as any;
+    const requestContext = getOptionalRequestContext();
+    if (!requestContext) {
+      throw new Error(
+        "Request context not available (likely during static generation)",
+      );
+    }
+
+    const { env } = requestContext as any;
     if (!env.IMAGES) {
       throw new Error("R2 bucket binding not found");
     }

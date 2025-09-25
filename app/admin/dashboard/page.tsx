@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
 
   return (
     <AdminLayout title="Tableau de bord">
-      <div className="w-full max-w-none space-y-6">
+      <div className="space-y-6">
         {/* Bienvenue */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h1 className="text-xl font-bold text-gray-900 mb-2">

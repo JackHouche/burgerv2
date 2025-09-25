@@ -116,7 +116,7 @@ export default function AdminProductsPage() {
 
   return (
     <AdminLayout title="Gestion des produits">
-      <div className="w-full max-w-none space-y-6">
+      <div className="space-y-6">
         {/* Add Product Button */}
         <div className="flex flex-col sm:flex-row sm:justify-end gap-4">
           <Button

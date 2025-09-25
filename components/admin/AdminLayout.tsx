@@ -164,7 +164,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64 xl:pl-72 min-w-0 flex-1">
+      <div className="w-full lg:ml-64 xl:ml-72">
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
           <div className="flex items-center gap-4 max-w-full">
@@ -186,7 +186,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="w-full max-w-full p-4 sm:p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

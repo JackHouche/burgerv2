@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { Header } from '@/components/ui/Header';
-import { Button } from '@/components/ui/Button';
-import { formatPrice } from '@/lib/utils';
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { Header } from "@/components/ui/Header";
+import { Button } from "@/components/ui/Button";
+import { formatPrice } from "@/lib/utils";
 import {
   ShoppingBag,
   Package,
@@ -13,9 +13,9 @@ import {
   TrendingUp,
   Plus,
   Settings,
-  Users
-} from 'lucide-react';
-import Link from 'next/link';
+  Users,
+} from "lucide-react";
+import Link from "next/link";
 
 interface DashboardStats {
   todayOrders: number;
@@ -25,21 +25,21 @@ interface DashboardStats {
 }
 
 export default function AdminDashboardPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     todayOrders: 0,
     todayRevenue: 0,
     pendingOrders: 0,
-    totalProducts: 0
+    totalProducts: 0,
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (status === 'loading') return;
+    if (status === "loading") return;
 
-    if (!session || session.user.role !== 'admin') {
-      router.push('/admin/login');
+    if (!session || session.user.role !== "admin") {
+      router.push("/admin/login");
       return;
     }
 
@@ -51,18 +51,18 @@ export default function AdminDashboardPage() {
       // Simuler les statistiques pour la démo
       setStats({
         todayOrders: 12,
-        todayRevenue: 287.50,
+        todayRevenue: 287.5,
         pendingOrders: 3,
-        totalProducts: 24
+        totalProducts: 24,
       });
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      console.error("Error fetching dashboard stats:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  if (status === 'loading' || loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="min-h-screen">
         <Header title="Tableau de bord" />
@@ -74,7 +74,7 @@ export default function AdminDashboardPage() {
     );
   }
 
-  if (!session || session.user.role !== 'admin') {
+  if (!session || session.user.role !== "admin") {
     return null;
   }
 
@@ -193,25 +193,54 @@ export default function AdminDashboardPage() {
           <div className="space-y-3">
             {/* Commandes simulées */}
             {[
-              { id: 1, number: 'CMD001', customer: 'Marie Dupont', total: 24.50, status: 'preparing' },
-              { id: 2, number: 'CMD002', customer: 'Jean Martin', total: 18.90, status: 'ready' },
-              { id: 3, number: 'CMD003', customer: 'Sophie Leblanc', total: 31.20, status: 'pending' }
+              {
+                id: 1,
+                number: "CMD001",
+                customer: "Marie Dupont",
+                total: 24.5,
+                status: "preparing",
+              },
+              {
+                id: 2,
+                number: "CMD002",
+                customer: "Jean Martin",
+                total: 18.9,
+                status: "ready",
+              },
+              {
+                id: 3,
+                number: "CMD003",
+                customer: "Sophie Leblanc",
+                total: 31.2,
+                status: "pending",
+              },
             ].map((order) => (
-              <div key={order.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+              <div
+                key={order.id}
+                className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+              >
                 <div>
                   <p className="font-medium text-gray-900">{order.number}</p>
                   <p className="text-sm text-gray-600">{order.customer}</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">{formatPrice(order.total)}</p>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
-                    'bg-green-100 text-green-800'
-                  }`}>
-                    {order.status === 'pending' ? 'En attente' :
-                     order.status === 'preparing' ? 'Préparation' :
-                     'Prêt'}
+                  <p className="font-semibold text-gray-900">
+                    {formatPrice(order.total)}
+                  </p>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      order.status === "pending"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : order.status === "preparing"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    {order.status === "pending"
+                      ? "En attente"
+                      : order.status === "preparing"
+                        ? "Préparation"
+                        : "Prêt"}
                   </span>
                 </div>
               </div>

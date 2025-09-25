@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/ui/Header";
 import { Button } from "@/components/ui/Button";
@@ -11,7 +11,7 @@ import { Plus, Edit, Trash2, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
 export default function AdminProductsPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useAuth();
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

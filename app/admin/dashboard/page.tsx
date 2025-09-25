@@ -91,68 +91,56 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Statistiques */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center justify-between">
-              <div className="min-w-0 flex-1 pr-2">
-                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">
-                  Commandes
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm text-gray-600 mb-1">Commandes</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {stats.todayOrders}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 truncate">
-                  aujourd'hui
-                </p>
+                <p className="text-xs text-gray-500 mt-1">aujourd'hui</p>
               </div>
-              <ShoppingBag className="w-6 h-6 sm:w-8 sm:h-8 text-orange-600 flex-shrink-0" />
+              <ShoppingBag className="w-8 h-8 text-orange-600 flex-shrink-0 ml-3" />
             </div>
           </div>
 
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center justify-between">
-              <div className="min-w-0 flex-1 pr-2">
-                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">
-                  Chiffre d'affaires
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-1">Chiffre d'affaires</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {formatPrice(stats.todayRevenue)}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 truncate">
-                  aujourd'hui
-                </p>
+                <p className="text-xs text-gray-500 mt-1">aujourd'hui</p>
               </div>
-              <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-green-600 flex-shrink-0" />
+              <TrendingUp className="w-8 h-8 text-green-600 flex-shrink-0 ml-3" />
             </div>
           </div>
 
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center justify-between">
-              <div className="min-w-0 flex-1 pr-2">
-                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">
-                  En attente
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-1">En attente</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {stats.pendingOrders}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 truncate">commandes</p>
+                <p className="text-xs text-gray-500 mt-1">commandes</p>
               </div>
-              <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-600 flex-shrink-0" />
+              <Clock className="w-8 h-8 text-yellow-600 flex-shrink-0 ml-3" />
             </div>
           </div>
 
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center justify-between">
-              <div className="min-w-0 flex-1 pr-2">
-                <p className="text-xs sm:text-sm text-gray-600 mb-1 truncate">
-                  Produits
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-1">Produits</p>
+                <p className="text-2xl font-bold text-gray-900">
                   {stats.totalProducts}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 truncate">au menu</p>
+                <p className="text-xs text-gray-500 mt-1">au menu</p>
               </div>
-              <Package className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600 flex-shrink-0" />
+              <Package className="w-8 h-8 text-blue-600 flex-shrink-0 ml-3" />
             </div>
           </div>
         </div>
@@ -164,28 +152,22 @@ export default function AdminDashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
             <Link href="/admin/products" className="block">
               <Button variant="outline" className="w-full justify-start h-12">
-                <Package className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
-                <span className="text-sm sm:text-base truncate">
-                  Gérer les produits
-                </span>
+                <Package className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span>Gérer les produits</span>
               </Button>
             </Link>
 
             <Link href="/admin/orders" className="block">
               <Button variant="outline" className="w-full justify-start h-12">
-                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
-                <span className="text-sm sm:text-base truncate">
-                  Voir les commandes
-                </span>
+                <ShoppingBag className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span>Voir les commandes</span>
               </Button>
             </Link>
 
             <Link href="/kitchen" className="block">
               <Button variant="outline" className="w-full justify-start h-12">
-                <Clock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
-                <span className="text-sm sm:text-base truncate">
-                  Interface cuisine
-                </span>
+                <Clock className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span>Interface cuisine</span>
               </Button>
             </Link>
           </div>

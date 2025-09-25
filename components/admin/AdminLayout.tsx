@@ -79,7 +79,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 sm:w-72 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -164,7 +164,7 @@ export function AdminLayout({ children, title }: AdminLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="w-full lg:ml-64 xl:ml-72">
+      <div className="w-full lg:ml-64">
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
           <div className="flex items-center gap-4 max-w-full">

@@ -116,20 +116,26 @@ export default function AdminProductsPage() {
 
   return (
     <AdminLayout title="Gestion des produits">
-      <div className="space-y-6">
+      <div className="w-full max-w-none space-y-6">
         {/* Add Product Button */}
-        <div className="flex justify-end">
-          <Button onClick={() => setShowAddForm(true)}>
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-4">
+          <Button
+            onClick={() => setShowAddForm(true)}
+            className="w-full sm:w-auto"
+          >
             <Plus className="w-4 h-4 mr-2" />
             Ajouter un produit
           </Button>
         </div>
         {/* Filtres par catégorie */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <h3 className="text-sm font-medium text-gray-700 mb-3 sm:hidden">
+            Filtrer par catégorie :
+          </h3>
+          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
                 selectedCategory === null
                   ? "bg-orange-600 text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -146,7 +152,7 @@ export default function AdminProductsPage() {
                 <button
                   key={category.value}
                   onClick={() => setSelectedCategory(category.value)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-colors flex-shrink-0 ${
                     selectedCategory === category.value
                       ? "bg-orange-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -181,9 +187,9 @@ export default function AdminProductsPage() {
                 key={product.id}
                 className="bg-white rounded-lg border border-gray-200 overflow-hidden"
               >
-                <div className="flex">
+                <div className="flex flex-col sm:flex-row">
                   {/* Image */}
-                  <div className="w-20 h-20 bg-gray-100 flex-shrink-0">
+                  <div className="w-full h-32 sm:w-20 sm:h-20 bg-gray-100 flex-shrink-0">
                     {product.imageUrl ? (
                       <Image
                         src={product.imageUrl}
@@ -201,26 +207,26 @@ export default function AdminProductsPage() {
 
                   {/* Contenu */}
                   <div className="flex-1 p-4">
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 gap-2">
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 className="font-semibold text-gray-900 mb-1">
                           {product.name}
                         </h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-2">
                           {product.description}
                         </p>
                       </div>
-                      <div className="ml-4 flex items-center gap-2">
-                        <span className="font-bold text-orange-600">
+                      <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
+                        <span className="font-bold text-orange-600 text-lg">
                           {formatPrice(product.price)}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span
-                          className={`px-2 py-1 text-xs rounded-full ${
+                          className={`px-2 py-1 text-xs rounded-full whitespace-nowrap ${
                             product.category === "burger"
                               ? "bg-red-100 text-red-800"
                               : product.category === "side"
@@ -243,7 +249,7 @@ export default function AdminProductsPage() {
                               product.isAvailable,
                             )
                           }
-                          className={`px-2 py-1 text-xs rounded-full transition-colors ${
+                          className={`px-2 py-1 text-xs rounded-full transition-colors whitespace-nowrap ${
                             product.isAvailable
                               ? "bg-green-100 text-green-800 hover:bg-green-200"
                               : "bg-gray-100 text-gray-800 hover:bg-gray-200"
@@ -253,13 +259,13 @@ export default function AdminProductsPage() {
                         </button>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                      <div className="flex items-center gap-1">
+                        <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-lg hover:bg-blue-50">
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteProduct(product.id)}
-                          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -268,9 +274,9 @@ export default function AdminProductsPage() {
 
                     {/* Ingrédients */}
                     {product.ingredients && product.ingredients.length > 0 && (
-                      <div className="mt-2 pt-2 border-t border-gray-100">
-                        <p className="text-xs text-gray-500">
-                          Ingrédients:{" "}
+                      <div className="mt-3 pt-2 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 line-clamp-2">
+                          <span className="font-medium">Ingrédients: </span>
                           {product.ingredients.map((i) => i.name).join(", ")}
                         </p>
                       </div>

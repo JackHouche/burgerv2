@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/client";
-import { orders, orderItems, timeSlots } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { orders, orderItems } from "@/lib/db/schema";
 import { z } from "zod";
-import { generateOrderNumber, calculateOrderTotal } from "@/lib/utils/orders";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -12,21 +10,30 @@ const createOrderSchema = z.object({
   customerName: z.string().min(1),
   customerEmail: z.string().email(),
   customerPhone: z.string().optional(),
-  pickupDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  pickupTime: z.string().regex(/^\d{2}:\d{2}$/),
-  items: z
-    .array(
-      z.object({
-        productId: z.number(),
-        productName: z.string(),
-        quantity: z.number().positive(),
-        unitPrice: z.number().positive(),
-        customizations: z.string().optional(),
-      }),
-    )
-    .min(1),
+  pickupDate: z.string(),
+  pickupTime: z.string(),
   notes: z.string().optional(),
+  items: z.array(
+    z.object({
+      productId: z.number(),
+      productName: z.string(),
+      quantity: z.number().positive(),
+      unitPrice: z.number().positive(),
+      customizations: z.string().optional(),
+    }),
+  ),
 });
+
+function generateOrderNumber(): string {
+  const now = new Date();
+  const year = now.getFullYear().toString().slice(-2);
+  const month = (now.getMonth() + 1).toString().padStart(2, "0");
+  const day = now.getDate().toString().padStart(2, "0");
+  const random = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
+  return `${year}${month}${day}-${random}`;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,9 +43,11 @@ export async function POST(request: NextRequest) {
     const db = getDb();
 
     // Calculer le montant total
-    const totalAmount = calculateOrderTotal(validatedData.items);
+    const totalAmount = validatedData.items.reduce(
+      (sum, item) => sum + item.unitPrice * item.quantity,
+      0,
+    );
 
-    // Générer le numéro de commande
     const orderNumber = generateOrderNumber();
 
     // Créer la commande
@@ -58,40 +67,33 @@ export async function POST(request: NextRequest) {
       .returning();
 
     // Ajouter les articles de la commande
-    const orderItemsData = validatedData.items.map((item) => ({
-      orderId: newOrder.id,
-      productId: item.productId,
-      productName: item.productName,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
-      customizations: item.customizations,
-      subtotal: item.quantity * item.unitPrice,
-    }));
-
-    await db.insert(orderItems).values(orderItemsData);
-
-    // Marquer le créneau comme réservé
-    await db
-      .update(timeSlots)
-      .set({
-        orderId: newOrder.id,
-        isAvailable: false,
-      })
-      .where(
-        and(
-          eq(timeSlots.date, validatedData.pickupDate),
-          eq(timeSlots.time, validatedData.pickupTime),
-        ),
+    if (validatedData.items.length > 0) {
+      await db.insert(orderItems).values(
+        validatedData.items.map((item) => ({
+          orderId: newOrder.id,
+          productId: item.productId,
+          productName: item.productName,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          customizations: item.customizations,
+          subtotal: item.unitPrice * item.quantity,
+        })),
       );
+    }
 
-    // Récupérer la commande complète avec les articles
-    const completeOrder = await getOrderById(db, newOrder.id);
-
-    return NextResponse.json(completeOrder, { status: 201 });
+    return NextResponse.json(
+      {
+        orderId: newOrder.id,
+        orderNumber: newOrder.orderNumber,
+        status: newOrder.status,
+        totalAmount: newOrder.totalAmount,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid input data", details: error.errors },
+        { error: "Invalid order data", details: error.errors },
         { status: 400 },
       );
     }
@@ -102,18 +104,4 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
-
-async function getOrderById(db: any, orderId: number) {
-  const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
-
-  const items = await db
-    .select()
-    .from(orderItems)
-    .where(eq(orderItems.orderId, orderId));
-
-  return {
-    ...order,
-    items,
-  };
 }

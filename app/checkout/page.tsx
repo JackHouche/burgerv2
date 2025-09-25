@@ -10,11 +10,6 @@ import { TimeSlotPicker } from "@/components/cart/TimeSlotPicker";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
 import { ShoppingBag } from "lucide-react";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -70,29 +65,26 @@ export default function CheckoutPage() {
         })),
       };
 
-      const response = await fetch("/api/stripe/checkout", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderData }),
+        body: JSON.stringify(orderData),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create checkout session");
+        throw new Error("Failed to create order");
       }
 
-      const data = (await response.json()) as { sessionId: string };
-      const stripe = await stripePromise;
+      const data = (await response.json()) as {
+        orderId: number;
+        orderNumber: string;
+      };
 
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: data.sessionId,
-        });
-        if (error) {
-          console.error("Stripe error:", error);
-        }
-      }
+      // Rediriger vers la page de confirmation
+      clearCart();
+      router.push(`/order/${data.orderNumber}`);
     } catch (error) {
       console.error("Checkout error:", error);
       alert("Erreur lors du paiement. Veuillez réessayer.");

@@ -13,21 +13,18 @@ import Link from "next/link";
 
 export default function OrderConfirmationPage() {
   const params = useParams();
-  const sessionId = params.sessionId as string;
+  const orderNumber = params.sessionId as string; // Renommé pour clarity
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (sessionId) {
-      // En production, l'ordre serait créé via le webhook Stripe
-      // Pour le développement, on simule la récupération
-      fetchOrderBySessionId(sessionId);
+    if (orderNumber) {
+      fetchOrderByNumber(orderNumber);
     }
-  }, [sessionId]);
+  }, [orderNumber]);
 
-  const fetchOrderBySessionId = async (sessionId: string) => {
+  const fetchOrderByNumber = async (orderNumber: string) => {
     try {
-      // TODO: Implémenter l'API pour récupérer une commande par session Stripe
       // Pour l'instant, on simule avec des données
       setLoading(false);
     } catch (error) {
@@ -50,7 +47,7 @@ export default function OrderConfirmationPage() {
 
   // Version de démonstration avec des données simulées
   const mockOrder = {
-    orderNumber: "CMD" + sessionId.slice(-8).toUpperCase(),
+    orderNumber: orderNumber || "CMD12345",
     customerName: "Client Test",
     status: "confirmed",
     totalAmount: 24.9,

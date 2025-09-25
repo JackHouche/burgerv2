@@ -4,6 +4,9 @@ import {
   generateTimeSlots,
   isSlotAvailable,
 } from "@/lib/utils/slots";
+import { getDb } from "@/lib/db/client";
+import { timeSlots } from "@/lib/db/schema";
+import { eq, and } from "drizzle-orm";
 import { z } from "zod";
 
 export const runtime = "edge";

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { ProductForm } from "@/components/admin/ProductForm";
 import { Button } from "@/components/ui/Button";
 import { formatPrice } from "@/lib/utils";
 import { Product } from "@/types";
@@ -61,6 +62,40 @@ export default function AdminProductsPage() {
     } catch (error) {
       console.error("Error deleting product:", error);
       alert("Erreur lors de la suppression");
+    }
+  };
+
+  const handleAddProduct = async (productData: any) => {
+    try {
+      const response = await fetch("/api/admin/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: productData.name,
+          description: productData.description,
+          price: parseFloat(productData.price),
+          category: productData.category,
+          ingredients: productData.ingredients.filter((ing: any) =>
+            ing.name.trim(),
+          ),
+        }),
+      });
+
+      if (response.ok) {
+        const newProduct = (await response.json()) as Product;
+        setProducts([...products, newProduct]);
+        setShowAddForm(false);
+      } else {
+        const errorData = await response.json();
+        throw new Error(
+          (errorData as any)?.error || "Erreur lors de l'ajout du produit",
+        );
+      }
+    } catch (error) {
+      console.error("Error adding product:", error);
+      throw error;
     }
   };
 
@@ -176,7 +211,7 @@ export default function AdminProductsPage() {
               <p className="text-gray-600 mb-4">
                 Commencez par ajouter des produits à votre menu
               </p>
-              <Button>
+              <Button onClick={() => setShowAddForm(true)}>
                 <Plus className="w-4 h-4 mr-2" />
                 Ajouter un produit
               </Button>
@@ -287,6 +322,12 @@ export default function AdminProductsPage() {
             ))
           )}
         </div>
+
+        <ProductForm
+          isOpen={showAddForm}
+          onClose={() => setShowAddForm(false)}
+          onSubmit={handleAddProduct}
+        />
       </div>
     </AdminLayout>
   );

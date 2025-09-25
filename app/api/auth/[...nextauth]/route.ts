@@ -100,6 +100,33 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    // Handle session endpoint specifically
+    if (path.includes("/session")) {
+      const token = request.cookies.get("auth-token")?.value;
+
+      if (!token) {
+        return NextResponse.json(null);
+      }
+
+      try {
+        const { payload } = await jwtVerify(token, JWT_SECRET);
+        return NextResponse.json({
+          user: {
+            id: payload.userId,
+            email: payload.email,
+            name: payload.name,
+            role: payload.role,
+          },
+        });
+      } catch {
+        return NextResponse.json(null);
+      }
+    }
+
+    // Default auth check
     const token = request.cookies.get("auth-token")?.value;
 
     if (!token) {

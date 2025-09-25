@@ -29,15 +29,19 @@ export function FloatingCart() {
       <div className="fixed bottom-24 right-4 z-40">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="group relative bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full p-4 shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105"
+          className="group relative bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 active:from-orange-700 active:to-orange-800 text-white rounded-full p-4 shadow-2xl hover:shadow-orange-500/30 active:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95 touch-manipulation min-h-[56px] min-w-[56px]"
         >
-          <ShoppingBag className="w-6 h-6" />
-          <div className="absolute -top-2 -right-2 bg-white text-orange-600 text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-md">
-            {itemCount}
+          <ShoppingBag
+            className={`w-6 h-6 transition-transform duration-200 ${isExpanded ? "scale-90 rotate-12" : "group-hover:scale-110"}`}
+          />
+          <div
+            className={`absolute -top-2 -right-2 bg-white text-orange-600 text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold shadow-md transition-all duration-200 ${itemCount > 9 ? "animate-pulse" : ""}`}
+          >
+            {itemCount > 99 ? "99+" : itemCount}
           </div>
 
           {/* Price bubble */}
-          <div className="absolute -top-1 -left-16 bg-white text-gray-900 px-3 py-1 rounded-full shadow-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="absolute -top-1 -left-20 bg-white text-gray-900 px-3 py-1.5 rounded-full shadow-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 transform scale-95 group-hover:scale-100 whitespace-nowrap">
             {formatPrice(total)}
           </div>
         </button>
@@ -48,20 +52,25 @@ export function FloatingCart() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/20 z-30"
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 animate-in fade-in duration-200"
             onClick={() => setIsExpanded(false)}
           />
 
           {/* Mini Cart */}
-          <div className="fixed bottom-24 right-4 left-4 bg-white rounded-2xl shadow-2xl border border-gray-200 z-40 max-w-sm ml-auto">
+          <div className="fixed bottom-24 right-4 left-4 bg-white rounded-2xl shadow-2xl border border-gray-200 z-40 max-w-sm ml-auto animate-in slide-in-from-bottom-2 slide-in-from-right-2 duration-300">
+            {/* Drag indicator */}
+            <div className="flex justify-center pt-2">
+              <div className="w-8 h-1 bg-gray-300 rounded-full"></div>
+            </div>
+
             <div className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold text-gray-900">Votre panier</h3>
                 <button
                   onClick={() => setIsExpanded(false)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 active:text-gray-800 p-2 -mr-2 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-all duration-150 touch-manipulation"
                 >
-                  <Plus className="w-5 h-5 rotate-45" />
+                  <Plus className="w-5 h-5 rotate-45 transition-transform duration-150 hover:scale-110" />
                 </button>
               </div>
 
@@ -97,7 +106,7 @@ export function FloatingCart() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsExpanded(false)}
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-semibold text-center block hover:shadow-lg transition-all duration-200"
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 active:from-orange-700 active:to-orange-800 text-white py-4 rounded-xl font-semibold text-center block hover:shadow-lg active:shadow-md transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] touch-manipulation min-h-[48px] flex items-center justify-center"
                 >
                   Commander ({itemCount})
                 </Link>
